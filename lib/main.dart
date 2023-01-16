@@ -1,115 +1,282 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_instagram_search_ui/models/user.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: MainScreen(),
+    ));
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MainScreen> createState() => _MainScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _MainScreenState extends State<MainScreen>
+    with SingleTickerProviderStateMixin {
+  final List<User> _users = [
+    User('Christin Hume', 'christinhume', 'assets/images/christin-hume.jpg',
+        true, true, true),
+    User('Stefan Stefancik', 'stefan2cik', 'assets/images/stefan-stefancik.jpg',
+        false, true, true),
+    User('Sergio De Paula', 'paulads', 'assets/images/sergio-de-paula.jpg',
+        false, true, false),
+    User('Gian Cescon', 'giancescon', 'assets/images/gian-cescon.jpg', true,
+        true, false),
+    User('Mubariz Mehdizadeh', 'mubariz',
+        'assets/images/mubariz-mehdizadeh.jpg', false, false, false),
+    User('Jonas Kakaroto', 'jonask', 'assets/images/jonas-kakaroto.jpg', true,
+        true, true),
+    User('Jeffery Erhunse', 'jefferyerhunse',
+        'assets/images/jeffery-erhunse.jpg', true, false, false),
+    User('Karl Magnuson', 'karlmagnuson', 'assets/images/karl-magnuson.jpg',
+        false, false, false),
+    User('Molly Blackbird', 'mollybb', 'assets/images/molly-blackbird.jpg',
+        false, false, true),
+    User('Ethan Hoover', 'ehoover', 'assets/images/ethan-hoover.jpg', false,
+        false, true),
+    User('Noah Silliman', 'noahsilliman', 'assets/images/noah-silliman.jpg',
+        false, false, false),
+    User('Drew Dizzy Graham', 'ddgraham', 'assets/images/drew-dizzy-graham.jpg',
+        true, false, false),
+    User('Craig Mckay', 'craigkay', 'assets/images/craig-mckay.jpg', false,
+        false, false),
+  ];
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+  late List<User> displayUsers;
+  late TextEditingController _searchController;
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    displayUsers = _users;
+    _searchController = TextEditingController();
+    _tabController = TabController(length: 5, vsync: this, initialIndex: 1);
+    _searchController.addListener(() {
+      setState(() {});
     });
   }
 
   @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+  void dispose() {
+    _searchController.dispose();
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  PreferredSizeWidget appBar() {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: Colors.black,
+      leading: const Icon(
+        Icons.arrow_back,
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+      titleSpacing: 0,
+      title: Container(
+        margin: const EdgeInsets.only(right: 24),
+        decoration: BoxDecoration(
+            color: const Color(0xff262626),
+            borderRadius: BorderRadius.circular(6)),
+        child: TextField(
+          onChanged: (v) {
+            setState(() {
+              displayUsers = v != ''
+                  ? _users.where((u) => u.username.contains(v)).toList()
+                  : _users;
+            });
+          },
+          controller: _searchController,
+          style: GoogleFonts.inter(
+              color: const Color(0xffF7F7F7),
+              fontSize: 14,
+              fontWeight: FontWeight.w500),
+          textAlignVertical: TextAlignVertical.center,
+          decoration: InputDecoration(
+              border: InputBorder.none,
+              isDense: true,
+              isCollapsed: true,
+              hintText: 'Search',
+              hintStyle: GoogleFonts.inter(
+                  color: const Color(0xff8E8E8E),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500),
+              suffixIconConstraints: const BoxConstraints(
+                  minWidth: 36, maxWidth: 36, minHeight: 36, maxHeight: 36),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              suffixIcon: _searchController.text.isNotEmpty
+                  ? GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _searchController.text = '';
+                          displayUsers = _users;
+                        });
+                      },
+                      child: const Icon(Icons.close, color: Color(0xffF7F7F7)))
+                  : null),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  //
+  // @afifcodes
+  // afifcodes.vercel.app/flutter
+  //
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: appBar(),
+      body: DefaultTabController(
+        length: 5,
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            children: [
+              TabBar(
+                  controller: _tabController,
+                  indicatorColor: const Color(0xffF7F7F7),
+                  labelPadding: EdgeInsets.zero,
+                  tabs: [
+                    Tab(
+                      child: Text(
+                        'Top',
+                        style: GoogleFonts.inter(fontSize: 12),
+                      ),
+                    ),
+                    Tab(
+                        child: Text('Accounts',
+                            style: GoogleFonts.inter(fontSize: 12))),
+                    Tab(
+                        child: Text('Audio',
+                            style: GoogleFonts.inter(fontSize: 12))),
+                    Tab(
+                        child: Text('Tags',
+                            style: GoogleFonts.inter(fontSize: 12))),
+                    Tab(
+                        child: Text('Places',
+                            style: GoogleFonts.inter(fontSize: 12))),
+                  ]),
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
+                  physics: const BouncingScrollPhysics(),
+                  children: [
+                    Center(
+                      child: Text('Top Result',
+                          style: GoogleFonts.inter(color: Colors.white)),
+                    ),
+                    ListView.builder(
+                      padding: const EdgeInsets.only(bottom: 24),
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: displayUsers.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 18, vertical: 6),
+                          child: Row(
+                            children: [
+                              Container(
+                                height: 64,
+                                width: 64,
+                                decoration: displayUsers[index].isHaveSnap
+                                    ? const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        gradient: LinearGradient(
+                                            colors: [
+                                              Colors.pink,
+                                              Colors.orange
+                                            ],
+                                            stops: [
+                                              0.4,
+                                              0.7
+                                            ],
+                                            begin: Alignment.topRight,
+                                            end: Alignment.bottomLeft),
+                                      )
+                                    : null,
+                                child: Container(
+                                  margin: const EdgeInsets.all(2),
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.black, width: 2),
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                          image: AssetImage(
+                                              displayUsers[index].image),
+                                          fit: BoxFit.cover)),
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 12,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(displayUsers[index].username,
+                                          style: GoogleFonts.inter(
+                                              fontWeight: FontWeight.w600,
+                                              color: const Color(0xffF7F7F7))),
+                                      displayUsers[index].isVerified
+                                          ? const Icon(
+                                              Icons.verified,
+                                              color: Colors.blue,
+                                              size: 14,
+                                            )
+                                          : const SizedBox(),
+                                    ],
+                                  ),
+                                  Text(
+                                    displayUsers[index].name,
+                                    style: GoogleFonts.inter(
+                                      color: const Color(0xff8E8E8E),
+                                    ),
+                                  ),
+                                  displayUsers[index].isFollowing
+                                      ? Text(
+                                          'Followed by afifcodes + 1 more',
+                                          style: GoogleFonts.inter(
+                                              fontSize: 12,
+                                              color: const Color(0xff8E8E8E)),
+                                        )
+                                      : const SizedBox()
+                                ],
+                              )
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                    Center(
+                      child: Text('Audio Result',
+                          style: GoogleFonts.inter(color: Colors.white)),
+                    ),
+                    Center(
+                      child: Text('Tags Result',
+                          style: GoogleFonts.inter(color: Colors.white)),
+                    ),
+                    Center(
+                      child: Text('Places Result',
+                          style: GoogleFonts.inter(color: Colors.white)),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
